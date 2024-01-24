@@ -187,6 +187,18 @@ msgstr "Posts recentes"
 msgid "Older posts"
 msgstr "Posts antigos"
 
+#: app/templates/search.html:4
+msgid "Search Results"
+msgstr "Resultados de procura"
+
+#: app/templates/search.html:12
+msgid "Previous results"
+msgstr "Resultados anteriores"
+
+#: app/templates/search.html:17
+msgid "Next results"
+msgstr "Próximos resultados"
+
 #: app/templates/user.html:8
 msgid "User"
 msgstr "Utilizador"
