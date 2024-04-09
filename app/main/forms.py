@@ -1,6 +1,7 @@
 from flask import request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
+from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import ValidationError, DataRequired, Length
 import sqlalchemy as sa
 from flask_babel import _, lazy_gettext as _l
@@ -12,6 +13,7 @@ class EditProfileForm(FlaskForm):
     username = StringField(_l('Username'), validators=[DataRequired()])
     about_me = TextAreaField(_l('About me'),
                              validators=[Length(min=0, max=140)])
+    profile_image = FileField('Update Profile Image', validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
     submit = SubmitField(_l('Submit'))
 
     def __init__(self, original_username, *args, **kwargs):

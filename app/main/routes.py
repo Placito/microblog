@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 from flask import render_template, flash, redirect, url_for, request, g, \
     current_app
@@ -11,6 +12,7 @@ from app.main.forms import EditProfileForm, EmptyForm, PostForm, SearchForm, \
 from app.models import User, Post, Message, Notification
 from app.translate import translate
 from app.main import bp
+from werkzeug.utils import secure_filename
 
 
 @bp.before_app_request
@@ -101,15 +103,19 @@ def edit_profile():
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
+        if form.profile_image.data:
+            filename = secure_filename(form.profile_image.data.filename)
+            filepath = os.path.join(current_app.root_path, 'static/profile_pics', filename)
+            form.profile_image.data.save(filepath)
+            current_user.profile_image = filepath  # Ensure you have a column in your User model to store this
         db.session.commit()
         flash(_('Your changes have been saved.'))
         return redirect(url_for('main.edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', title=_('Edit Profile'),
-                           form=form)
-
+        # No need to pre-populate the file field
+    return render_template('edit_profile.html', title=_('Edit Profile'), form=form)
 
 @bp.route('/follow/<username>', methods=['POST'])
 @login_required
