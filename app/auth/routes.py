@@ -12,6 +12,11 @@ from app.models import User
 from app.auth.email import send_password_reset_email
 from werkzeug.utils import secure_filename
 
+# This function checks if the uploaded file is allowed
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in os.environ.get('ALLOWED_EXTENSIONS')
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -37,26 +42,20 @@ def logout():
     return redirect(url_for('main.index'))
 
 
+# view function that is going to handle user registrations 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
-    
+        return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        # Save the uploaded image if it exists and is valid
-        if form.profile_image.data:
-            image_file = form.profile_image.data
-            filename = secure_filename(image_file.filename)
-            filepath = os.path.join(current_app.root_path, 'static/profile_images', filename)
-            image_file.save(filepath)
-        
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
-        # If the image was uploaded, save its file path to the user's profile image field
-        if form.profile_image.data:
-            user.profile_image = filename  # Assuming you have a profile_image column in your User model
-        
+        if form.profile_pic.data and allowed_file(form.profile_pic.data.filename):
+            filename = secure_filename(form.profile_pic.data.filename)
+            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            form.profile_pic.data.save(filepath)
+            user.profile_pic = filepath  # Save the path to the user's profile image
         db.session.add(user)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')

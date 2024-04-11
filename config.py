@@ -22,5 +22,6 @@ class Config:
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
     REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'
     POSTS_PER_PAGE = 25
-    UPLOAD_FOLDER = 'static/profile_pics'
-    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    # Define the allowed extensions and upload folder somewhere in your global scope
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'} 
+    UPLOAD_FOLDER = 'app/uploads'

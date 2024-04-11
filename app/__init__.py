@@ -40,6 +40,12 @@ def create_app(config_class=Config):
         if app.config['ELASTICSEARCH_URL'] else None
     app.redis = Redis.from_url(app.config['REDIS_URL'])
     app.task_queue = rq.Queue('microblog-tasks', connection=app.redis)
+    # Set up the full path for the upload folder
+    upload_folder = os.path.join(app.instance_path, 'uploads')
+    app.config['UPLOAD_FOLDER'] = upload_folder
+    # Create the uploads directory if it does not exist
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
