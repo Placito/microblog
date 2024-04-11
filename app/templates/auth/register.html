@@ -3,5 +3,8 @@
 
 {% block content %}
     <h1>{{ _('Register') }}</h1>
-    {{ wtf.quick_form(form) }}
+    <form method="post" enctype="multipart/form-data">  <!-- Add enctype attribute here -->
+        {{ form.hidden_tag() }}
+        {{ wtf.quick_form(form) }}
+      </form>
 {% endblock %}

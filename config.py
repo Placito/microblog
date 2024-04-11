@@ -24,4 +24,4 @@ class Config:
     POSTS_PER_PAGE = 25
     # Define the allowed extensions and upload folder somewhere in your global scope
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'} 
-    UPLOAD_FOLDER = 'app/uploads'
+    UPLOAD_FOLDER = 'uploads'

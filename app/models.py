@@ -97,7 +97,7 @@ followers = sa.Table(
 
 class User(PaginatedAPIMixin, UserMixin, db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    profile_image = db.Column(db.String(128))  # Adjust length as necessary
+    profile_pic = db.Column(db.String(), nullable=True)
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True,
                                                 unique=True)
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True,
@@ -138,6 +138,11 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def profile_picture_url(self):
+        if self.profile_pic:
+            return url_for('uploaded_file', filename=self.profile_pic, _external=True)
+        return self.avatar(256)  # You can adjust the size if needed
+    
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'

@@ -2,6 +2,9 @@
 {% import "bootstrap_wtf.html" as wtf %}
 
 {% block content %}
-    <h1>{{ _('Edit Profile') }}</h1>
+  <h1>{{ _('Edit Profile') }}</h1>
+  <form method="post" enctype="multipart/form-data">  <!-- Add enctype attribute here -->
+    {{ form.hidden_tag() }}
     {{ wtf.quick_form(form) }}
+  </form>
 {% endblock %}
