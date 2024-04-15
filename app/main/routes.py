@@ -100,7 +100,7 @@ def edit_profile():
         print(form.username.data)
         filename = save_picture(form.profile_pic.data)
         current_user.profile_pic = filename
-        print(filename)
+        print(filename + " - path")
         db.session.commit()
         flash('Your changes have been saved.')
         return redirect(url_for('main.edit_profile'))
@@ -118,7 +118,7 @@ def save_picture(profile_pic):
     print(picture_fn)
     # Save the picture
     profile_pic.save(picture_path)
-    print(picture_path)
+    print(picture_path + '.............')
     return picture_fn
 
 # This endpoint handles the actual upload process
@@ -137,7 +137,6 @@ def handle_upload():
         file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         current_user.profile_pic = filename
-        print(filename)
         db.session.commit()
         flash('Your profile image has been updated!')
         return redirect(url_for('main.user', username=current_user.username))

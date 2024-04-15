@@ -5,6 +5,7 @@ from flask_login import login_user, logout_user, current_user
 from flask_babel import _
 import sqlalchemy as sa
 from app import db
+import app
 from app.auth import bp
 from app.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
@@ -15,7 +16,7 @@ from werkzeug.utils import secure_filename
 # This function checks if the uploaded file is allowed
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in os.environ.get('ALLOWED_EXTENSIONS')
+           filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
