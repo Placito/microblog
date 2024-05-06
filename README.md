@@ -10,5 +10,5 @@ Based on the Flask Mega Tutorial from Miguel Grinberg.
 ## Instructions on how to start the application
 
 * activate ````activate virtual environment````
-* install the requerimenta ````pip install -r requirements.txt````
-* flask run
+* install the requeriments ````pip install -r requirements.txt````
+* start ````flask run````
