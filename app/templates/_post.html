@@ -2,7 +2,13 @@
     <tr>
         <td width="70px">
             <a href="{{ url_for('main.user', username=post.author.username) }}">
-                <img src="{{ post.author.avatar(70) }}" />
+            <!-- User Profile Picture -->
+            <!-- Attempt to use the uploaded profile picture; if none exists, use Gravatar -->
+            {% if profile_pic_url %}
+                <img src="{{ url_for('upload_image', filename=picture_fn) }}" alt="Profile Picture">
+            {% else %}
+                <img src="{{ user.avatar(70) }}" alt="Profile Picture">
+            {% endif %}
             </a>
         </td>
         <td>

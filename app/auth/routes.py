@@ -67,7 +67,7 @@ def register():
 @bp.route('/upload_image', methods=['POST'])
 def upload_image():
     if 'profile_image' in request.files:
-        file = request.files['profile_image']
+        file = request.files['profile_pic']
         if file.filename != '':
             filename = secure_filename(file.filename)
             file.save(os.path.join(bp.config['UPLOAD_FOLDER'], filename))

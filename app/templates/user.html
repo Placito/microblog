@@ -7,7 +7,7 @@
             <!-- User Profile Picture -->
             <!-- Attempt to use the uploaded profile picture; if none exists, use Gravatar -->
             {% if profile_pic_url %}
-                <img src="{{ url_for('uploaded_file', filename=profile_pic_url) }}" alt="Profile Picture">
+                <img src="{{ url_for('upload_image', filename=picture_fn) }}" alt="Profile Picture">
             {% else %}
                 <img src="{{ user.avatar(128) }}" alt="Profile Picture">
             {% endif %}
