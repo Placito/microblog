@@ -12,6 +12,7 @@ class Config:
         'sqlite:///' + os.path.join(basedir, 'app.db')
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    # 25 is the default port for sending email
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
@@ -24,4 +25,4 @@ class Config:
     POSTS_PER_PAGE = 25
     # Define the allowed extensions and upload folder somewhere in your global scope
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'} 
-    UPLOAD_FOLDER = 'uploads'
+    UPLOAD_FOLDER = 'instance/uploads'
