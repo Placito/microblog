@@ -90,7 +90,7 @@ def reset_password_request():
         flash(
             _('Check your email for the instructions to reset your password'))
         return redirect(url_for('auth.login'))
-    return render_template('auth/reset_password_request.html',
+    return render_template('auth/reset_password.html',
                            title=_('Reset Password'), form=form)
 
 
