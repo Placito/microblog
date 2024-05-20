@@ -12,6 +12,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 import redis
 import rq
+import base64
+import os
 from app import db, login
 from app.search import add_to_index, remove_from_index, query_index
 
@@ -223,11 +225,6 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
     def get_tasks_in_progress(self):
         query = self.tasks.select().where(Task.complete == False)
         return db.session.scalars(query)
-
-    def get_task_in_progress(self, name):
-        query = self.tasks.select().where(Task.name == name,
-                                          Task.complete == False)
-        return db.session.scalar(query)
 
     def posts_count(self):
         query = sa.select(sa.func.count()).select_from(
