@@ -1,10 +1,9 @@
-from flask import g
 import os
 import secrets
 import sqlalchemy as sa
 from datetime import datetime, timezone
 from dotenv import load_dotenv
-from flask import abort, current_app, flash, redirect, render_template, request, send_from_directory, url_for
+from flask import abort, current_app, flash, redirect, render_template, request, send_from_directory, url_for, g
 from flask_babel import _, get_locale
 from flask_login import current_user, login_required
 from langdetect import detect, LangDetectException
@@ -48,13 +47,16 @@ def index():
         db.session.commit()
         flash(_('Your post is now live!'))
         return redirect(url_for('main.index'))
+    user = User.query.get(current_user.id)
+    avatar = User.query.get(current_user.avatar)
     page = request.args.get('page', 1, type=int)
+    profile_pic = user.profile_pic if user.profile_pic else None
     posts = db.paginate(current_user.following_posts(), page=page,
                         per_page=current_app.config['POSTS_PER_PAGE'],
                         error_out=False)
     next_url = url_for('main.index', page=posts.next_num) if posts.has_next else None
     prev_url = url_for('main.index', page=posts.prev_num) if posts.has_prev else None
-    return render_template('index.html', title=_('Home'), user=user, form=form,
+    return render_template('index.html', title=_('Home'), user=user, profile_pic=profile_pic, avatar=avatar, form=form,
                            posts=posts.items, next_url=next_url,
                            prev_url=prev_url)
 
@@ -76,16 +78,17 @@ def user(username):
 @login_required
 def explore():
     page = request.args.get('page', 1, type=int)
+    # Ensure sa is imported as SQLAlchemy (e.g., from sqlalchemy import select as sa)
     query = sa.select(Post).order_by(Post.timestamp.desc())
-    posts = db.paginate(query, page=page,
-                        per_page=current_app.config['POSTS_PER_PAGE'],
-                        error_out=False)
-    next_url = url_for('main.explore', page=posts.next_num) \
-        if posts.has_next else None
-    prev_url = url_for('main.explore', page=posts.prev_num) \
-        if posts.has_prev else None
-    return render_template('index.html', title=_('Explore'),
-                           posts=posts.items, next_url=next_url,
+    posts = db.paginate(query, page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+
+    next_url = url_for('main.explore', page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('main.explore', page=posts.prev_num) if posts.has_prev else None
+    
+    return render_template('index.html', 
+                           title=_('Explore'), 
+                           posts=posts.items, 
+                           next_url=next_url, 
                            prev_url=prev_url)
 
 # edit profile view function

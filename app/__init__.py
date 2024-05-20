@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_babel import Babel, lazy_gettext as _l
 from elasticsearch import Elasticsearch
@@ -25,13 +24,14 @@ login = LoginManager()
 login.login_view = 'auth.login'
 login.login_message = _l('Please log in to access this page.')
 mail = Mail()
-bootstrap = Bootstrap()
 moment = Moment()
 babel = Babel()
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
@@ -42,12 +42,6 @@ def create_app(config_class=Config):
         if app.config['ELASTICSEARCH_URL'] else None
     app.redis = Redis.from_url(app.config['REDIS_URL'])
     app.task_queue = rq.Queue('microblog-tasks', connection=app.redis)
-    # Set up the full path for the upload folder
-    upload_folder = os.path.join(app.instance_path, 'uploads')
-    app.config['UPLOAD_FOLDER'] = upload_folder
-    # Create the uploads directory if it does not exist
-    if not os.path.exists(app.config['UPLOAD_FOLDER']):
-        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
